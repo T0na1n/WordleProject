@@ -31,13 +31,10 @@ def RateProbaPerFreq(inlist):
         score=1
         for i in range(len(mot)):
             score*=freqletter[mot[i]][i]
+        if mot in motToScore:
+            print(mot)
         motToScore[mot] = score
-
-    Scoretomot = {v:k for k,v in motToScore.items()}        #mot:score -> score:mot
-    '''score = [score for score in Scoretomot.keys()]
-    score.sort(reverse=True)
-    mot = [Scoretomot[ind] for ind in score]'''                #mots triés par score
-    return Scoretomot                                       #return un dico score:mot
+    return motToScore                                      #return un dico score:mot
 
 def comptage(mot):
     dico={}
