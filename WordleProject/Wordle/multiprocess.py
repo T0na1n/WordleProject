@@ -1,28 +1,28 @@
-from multiprocessing import Pipe,Process
+from multiprocessing import Queue,Process
 from Wordle import  *
-import time
-NbCore = 4
-GamesPerCore = [10, 1000, 100, 2000]
-data = []
-def PlayXgames(iter, nbprocess):
-    localdata = []
-    for i in range(iter):
-        localdata.append(["processus n°",nbprocess," itération", i])
-    print(localdata)
-    return localdata
 
-
-if __name__ == '__main__':
+def PlayXgames(n, q, iter):
+    for _ in range(iter):
+        q.put(PlayWordle(guesstype=guesstype, printcolorattempt=ColorAttemptInConsole, usinglast=usinglast, optifirstguess=optifirstguess))
+def PlayMP():
     processes = []
+    results = []
+    q = Queue()
 
-    for core in range(NbCore):
-        p = Process(target=PlayXgames, args=[GamesPerCore[core], core])
+    execPerCore = quantAttempt // nbProcess
+
+    for core in range(nbProcess):
+        p = Process(target=PlayXgames, args=[core,q,execPerCore])
         processes.append(p)
-        p.start()
-    print("finished attribution")
+    for proc in processes:
+        proc.start()
+    for _ in range(execPerCore):
+        for _ in processes:
+            results.append(q.get())
+    for proc in processes:
+        proc.join()
+    del processes, q
 
-    for process in processes:
-        process.join()
-    print("finished merging")
-
-    print(data)
+    for i in range(quantAttempt % nbProcess):
+        results.append(PlayWordle(guesstype=guesstype, printcolorattempt=ColorAttemptInConsole, usinglast=usinglast, optifirstguess=optifirstguess))
+    return results
