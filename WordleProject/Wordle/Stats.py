@@ -56,7 +56,7 @@ def IntersectInDB(DB):
     intersect = évalmots[0]
     for e in évalmots[1:]:
         intersect = e & intersect
-    return intersect
+    return list(intersect)
 
 def getLetDiff(DB):
 

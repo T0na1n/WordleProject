@@ -46,13 +46,9 @@ def startGame():
     attempt = {}
 
     if nbProcess>1:
-        if ColorAttemptInConsole:
-            print("color attempt not available with multiprocessing")
-            return
-        else:
-            attempt = PlayMP(guesstype=guesstype, printcolorattempt=ColorAttemptInConsole, usinglast=usinglast, optifirstguess=optifirstguess)
-            for i in range(len(attempt)):
-                nbtry[i] = attempt[i][0]
+        attempt = PlayMP(guesstype=guesstype, printcolorattempt=ColorAttemptInConsole, usinglast=usinglast, optifirstguess=optifirstguess)
+        for i in range(len(attempt)):
+            nbtry[i] = attempt[i][0]
     else:
         for i in range(quantAttempt):
             attempt[i] = PlayWordle(guesstype=guesstype, printcolorattempt=ColorAttemptInConsole, usinglast=usinglast, optifirstguess=optifirstguess)
@@ -91,47 +87,21 @@ def startGame():
 
 if __name__ == '__main__':
 
-    guesstype = 'random'
-    quantAttempt = 5000
+    guesstype = 'maxScored'
+    quantAttempt = 6000
     plotting = False
     progressbar = True
-    usinglast = True
-    optifirstguess = 0
+    usinglast = {'nbIdntMin':2 , 'tailleDBmin':2}
+    optifirstguess = ['pares']
+    '''['carie', 'pares', 'paree']'''
     ColorAttemptInConsole = False
     nbProcess = 4
-
-    optifirstguess = 0
-    guesstype = 'random'
-    startGame()
-    guesstype = 'maxScored'
-    startGame()
-    guesstype = 'minScored'
-    startGame()
-    guesstype = 'medScored'
     startGame()
 
 
 
-    optifirstguess = 1
-    guesstype = 'random'
-    startGame()
-    guesstype = 'maxScored'
-    startGame()
-    guesstype = 'minScored'
-    startGame()
-    guesstype = 'medScored'
-    startGame()
 
 
-    optifirstguess = 2
-    guesstype = 'random'
-    startGame()
-    guesstype = 'maxScored'
-    startGame()
-    guesstype = 'minScored'
-    startGame()
-    guesstype = 'medScored'
-    startGame()
 
     if plotting:
         plt.show()
