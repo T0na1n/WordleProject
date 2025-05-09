@@ -80,7 +80,7 @@ def getLetDiff(DB):
 
 def BestWithFollowing(DB, mustHave):
     scoremax,motmax = 0, DB[0]
-    for mot in DB[1:]:
+    for mot in DB:
         score = 0
         for l in mustHave:
             if l in mot:
