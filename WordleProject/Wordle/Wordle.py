@@ -27,8 +27,15 @@ def takeaguess(DB,guesstype):
         motToScore = RateProbaPerFreq(DB)
         scoretomot = [(score, mot) for mot, score in motToScore.items()]
         scoretomot.sort(reverse=True)
-        _,motmax = scoretomot[0]
+        best10 = scoretomot[:10] if len(scoretomot) >= 10 else scoretomot
+        (_,motinit) = best10[0]
+        diverscoremax, motmax = len(set(motinit)),motinit
+        for (_,mot) in best10[1:]:
+            divscore = len(set(mot))
+            if diverscoremax<divscore:
+                diverscoremax,motmax = divscore,mot
         return motmax
+
     elif guesstype == 'medScored':                    #return le mot max de du dico RateProbaPerFreq
         motToScore = RateProbaPerFreq(DB)
         scoretomot = [(score, mot) for mot, score in motToScore.items()]

@@ -91,15 +91,12 @@ if __name__ == '__main__':
     quantAttempt = 6000
     plotting = False
     progressbar = True
-    usinglast = {'nbIdntMin':2 , 'tailleDBmin':2}
+    usinglast = {'nbIdntMin':2 , 'tailleDBmin':3}
     optifirstguess = ['pares']
     '''['carie', 'pares', 'paree']'''
     ColorAttemptInConsole = False
     nbProcess = 4
     startGame()
-
-
-
 
 
 

@@ -31,8 +31,6 @@ def RateProbaPerFreq(inlist):
         score=1
         for i in range(len(mot)):
             score*=freqletter[mot[i]][i]
-        if mot in motToScore:
-            print(mot)
         motToScore[mot] = score
     return motToScore                                      #return un dico score:mot
 
