@@ -3,8 +3,15 @@ from multiprocessing import Process, Queue
 from os import chdir, getcwd
 from time import time
 chdir(getcwd()+"\DB")
-DBrated = open('raterWords', 'w', encoding="utf8")
 
+DBrated = open('Choice1', 'r', encoding="utf8")
+strDB = [e.strip()[:-1].lower() for e in DBrated.readlines()]
+évalDB = [(float(string[6:]), string[:5]) for string in strDB]
+évalDB.sort()
+
+choice2 = open('TARIEchoice2', 'r', encoding="utf8")
+dicopatern = {e[:5]:e[6:-1] for e in choice2.readlines()}
+Listchoice2 = [(e[:5], e[6:-1]) for e in choice2.readlines()]
 
 
 def evalPatern(toGuess, mot):
@@ -93,13 +100,13 @@ def divisListe(List, n):
         out[i].append(rest[i])
     return out
 
-def evalWords(atester):
-
+def evalWords(atester, DB):
+    out = []
     for firstguess in atester:
         patern_to_proba= {}
         patern_to_matches = {}
-        DBsize = len(ListDB)
-        for toGuess in ListDB:
+        DBsize = len(DB)
+        for toGuess in DB:
             patern = evalPatern(toGuess, firstguess)
             patern_to_proba[patern] = 1 if patern not in patern_to_proba else patern_to_proba[patern]+1
             if patern not in patern_to_matches:
@@ -120,51 +127,40 @@ def evalWords(atester):
             #print(pat, freq, patern_to_matches[pat])
 
         #q.put((firstguess, globalScore))
-        return (firstguess, globalScore)
+        out.append((globalScore,firstguess))
+    return out
 
+def bestSecondchoice():
+    firstguess = 'tarie'
+    dicopatern = {}
+    for toGuess in ListDB:
+        patern =  evalPatern(toGuess, firstguess)
+        dicopatern[patern] = [toGuess] if patern not in dicopatern else dicopatern[patern]+[toGuess]
 
+    for patern1,liste1 in  dicopatern.items():
+        temp = evalWords(liste1, liste1)
+        temp.sort()
+        scoremax,motmax = temp[-1]
+        dicopatern[patern1] = motmax
+        print(patern1, motmax)
 
-for mot in ListDB:
-    lemot, lescore = evalWords([mot])
-    DBrated.write(lemot+' '+str(lescore)+','+'\n')
+    print(dicopatern)
 
-DBrated.close()
+def bestFirstchoice():
+    for mot in ListDB:
+        lemot, lescore = evalWords([mot])
+        DBrated.write(lemot+' '+str(lescore)+','+'\n')
 
+    DBrated.close()
 
+t = '🟩🟥🟨'
+print(dicopatern['🟥🟥🟥🟥🟥'])
 
+s1 = set(matchInList('tarie', '🟥🟥🟥🟥🟥'))
+s2 = set(matchInList('cools', '🟥🟥🟥🟥🟩'))
+s3 = set(matchInList('junky', '🟥🟩🟥🟥🟥'))
+ssum = s1 & s2 & s3
+print(ssum)
+print(takeaguess(ssum, 'maxScored'))
+print(BestWithFollowing(ListDB, getLetDiff(ssum)))
 
-
-
-
-
-
-
-'''
-if __name__ == '__main__':
-    nbprocess = 4
-    processes = []
-    q = Queue()
-    splitlist = divisListe(l1, nbprocess)
-    results = []
-
-    for l in splitlist:
-        p = Process(target=evalWords, args=[q, l])
-        processes.append(p)
-
-    for p in processes:
-        p.start()
-
-    for _ in range(len(splitlist)):
-        for _ in range(len(splitlist[0])):
-            val = q.get()
-            results.append(val)
-            print(val)
-
-    for p in processes:
-        p.join()
-
-    del processes, q
-
-    print(results)'''
-
-''''(rites', 184.0)'''

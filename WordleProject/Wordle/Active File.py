@@ -1,5 +1,3 @@
-from mimetypes import guess_extension
-
 from Wordle import *
 import matplotlib.pyplot as plt
 from sys import stdout
@@ -92,7 +90,8 @@ if __name__ == '__main__':
     plotting = False
     progressbar = True
     usinglast = {'nbIdntMin':2 , 'tailleDBmin':3}
-    optifirstguess = ['pares']
+    optifirstguess = ['sorte']
+    '''[(184.0, 'saine'), (184.0, 'saite'), (185.0, 'cores'), (185.0, 'tires'), (187.0, 'pares'), (188.0, 'tores'), (190.0, 'taris'), (191.0, 'sorte'), (192.0, 'tares'), (192.0, 'tarie')]'''
     '''['carie', 'pares', 'paree']'''
     ColorAttemptInConsole = False
     nbProcess = 4
