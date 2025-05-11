@@ -142,7 +142,6 @@ def PlayWordle(toGuess='', guesstype='random',logging=False,printcolorattempt=Fa
     Trouvé = False                                      #bool indiquant si la partie est gagnée
     itération = 0                                      #nb d'essais pour deviner
 
-
     while not Trouvé:
         itération += 1
         n = len(DB)
@@ -183,6 +182,8 @@ def PlayWordle(toGuess='', guesstype='random',logging=False,printcolorattempt=Fa
             Trouvé = True
 
     return [itération,guessarchive,toGuess]
+
+
 def checkaword(mot, guess, toGuess, logging=False,printcolorattempt=False):
     "prend en entrée une DB, un essai et la réponse, return la DB nettoyée en consequence"
     rouge = []          #lettres à éliminer

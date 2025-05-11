@@ -1,6 +1,8 @@
 
 
-
+a = set([5, 1])
+b = set([1])
+print(a & b)
 
 
 

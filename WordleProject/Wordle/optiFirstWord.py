@@ -1,7 +1,11 @@
 from Wordle import *
 from multiprocessing import Process, Queue
 from os import chdir, getcwd
+from sys import stdout
 from time import time
+from random import randint
+import numpy as np
+
 chdir(getcwd()+"\DB")
 
 DBrated = open('Choice1', 'r', encoding="utf8")
@@ -153,7 +157,88 @@ def bestFirstchoice():
 
     DBrated.close()
 
-t = '🟩🟥🟨'
+def PreshotWordle(toGuess='', usinglast = {'nbDiffMax': 6, 'tailleDBmin': 0}):
+    if toGuess == '':
+        toGuess = ListDB[randint(0, len(ListDB) - 1)]   #on définit le mot à deviner aléatoirement
+
+    guess1 = 'tarie'
+    p1 = evalPatern(toGuess, guess1)
+    s1 = set(matchInList(guess1, p1))
+
+    guess2 = dicopatern[p1]
+    p2 = evalPatern(toGuess, guess2)
+    s2 = set(matchInList(guess2, p2))
+
+    iteration = 2
+    ssum = s1 & s2
+
+    guess = guess2
+
+    archiveguess = [guess1, guess2]
+
+    while len(ssum)>1 and iteration < 20:
+        iteration += 1
+
+        if len(ssum) > usinglast['tailleDBmin'] and usinglast['nbIdntMin'] <= len(IntersectInDB(ssum)):
+            newGuess = BestWithFollowing(ListDB, getLetDiff(ssum))
+            guess = newGuess if newGuess != guess else takeaguess(ssum, 'maxScored')
+        else:
+            guess = takeaguess(ssum, 'maxScored')
+
+        archiveguess.append(guess)
+        p = evalPatern(toGuess, guess)
+        ssum = ssum & set(matchInList(guess, p))
+
+    return (iteration,archiveguess)
+
+def playAllGamse():
+    nbiter = len(ListDB)
+    listattempt = []
+    winrate = 0
+    specialanswer = []
+    for i in range(len(ListDB)):
+        iteration,answer = PreshotWordle(toGuess=ListDB[i],usinglast={'nbIdntMin':2 , 'tailleDBmin':3})
+        if iteration<=6:
+            winrate+=1
+        else:
+            specialanswer.append(answer)
+
+        listattempt.append(iteration)
+
+        pourc = int((i + 1) / nbiter * 100)
+        stdout.write('\r[' + '█' * pourc + '░' * (100 - pourc) + f'] tâche {pourc}% complète :')
+
+    print(f'\n{nbiter} essais réalisés')
+    print("| coups moyen :",np.mean(listattempt),"| winrate :", winrate / nbiter,"| variance :", np.var(listattempt),"| écart-type :",np.std(listattempt), "|")
+    print(specialanswer)
+
+
+
+fail = ['verre', 'barbe', 'barre', 'vache', 'gaffe', 'sages', 'verbe', 'hache', 'pipes', 'sures', 'gages', 'pises', 'soums', 'kikis', 'wikis', 'fouge', 'gouge', 'boums', 'barye', 'bures', 'saxes', 'gagee', 'kiwis', 'gazee']
+
+
+print(PreshotWordle(toGuess='verre',usinglast={'nbIdntMin':3 , 'tailleDBmin':3}))
+
+
+guess1 = 'tarie'
+p1 = evalPatern('verre', guess1)
+s1 = set(matchInList(guess1, p1))
+
+guess2 = 'ourse'
+p2 = evalPatern('verre', guess2)
+s2 = set(matchInList(guess2, p2))
+
+guess3 = 'germe'
+p3 = evalPatern('verre', guess3)
+s3 = set(matchInList(guess3, p3))
+
+
+print(len(s1 & s2))
+print(len(s1&s2&s3))
+print(BestWithFollowing(ListDB, getLetDiff(s1 & s2)))
+
+
+'''
 print(dicopatern['🟥🟥🟥🟥🟥'])
 
 s1 = set(matchInList('tarie', '🟥🟥🟥🟥🟥'))
@@ -164,3 +249,4 @@ print(ssum)
 print(takeaguess(ssum, 'maxScored'))
 print(BestWithFollowing(ListDB, getLetDiff(ssum)))
 
+'''
