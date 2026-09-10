@@ -1,2 +1,3 @@
-Projet de TIPE
--> réalisation d'un bot de résolution du Wordle
+Projet pour une présentation de TIPE donnée en juillet 2026 dans le cadre de la participation aux concours d'ingénieurs filière MP
+cette version est largement dépassée, je ferais le push et la formalisation du projet si j'ai le temps...
+si le projet vous intéresse et que c'est toujours pas clean contactez moi par mail
